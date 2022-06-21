@@ -2,13 +2,13 @@ const { BadRequestError } = require("../utils/errors");
 
 class GiftExchange {
   static pairs(names) {
-    let temp = names.slice();
     if (!names) {
       throw new BadRequestError("names is undefined");
     }
-    if (temp.length % 2 == 1) {
+    if (names.length % 2 == 1) {
       throw new BadRequestError("the number of names cannot be odd");
     }
+    let temp = names.slice();
     let pairings = [];
     while (temp.length > 0) {
       const firstInd = Math.floor(Math.random() * temp.length);
@@ -26,40 +26,28 @@ class GiftExchange {
   }
 
   static traditional(names) {
-    let res = [];
-    let temp = names.slice();
     if (!names) {
       throw new BadRequestError("names is undefined");
     }
-    if (temp.length % 2 == 1) {
+    if (names.length % 2 == 1) {
       throw new BadRequestError("the number of names cannot be odd");
     }
+    let res = [];
+    let temp = names.slice();
     temp.sort(() => 0.5 - Math.random());
 
-    let currentName = temp.pop();
+    let firstName = temp[temp.length - 1];
+    let name2 = "";
 
-    for (let i = 0; i < names.length; i++) {
-      let nextName = temp.pop();
-      res.push(`${currentName} is giving a gift to ${nextName}`);
-      currentName = nextName;
+    while (temp.length > 1) {
+      let name1 = temp.pop();
+      temp.sort(() => 0.5 - Math.random());
+      name2 = temp[temp.length - 1];
+      res.push(`${name1} is giving a gift to ${name2}`);
+
+      name1 = name2;
     }
-    return res;
-
-    // const firstInd = Math.floor(Math.random() * temp.length);
-    // // let currentName = temp[firstInd];
-    // let arr = temp.splice(firstInd, 1);
-    // let currentName = arr[0];
-
-    // while (temp.length > 0) {
-    //   let nextInd = Math.floor(Math.random() * temp.length);
-    //   // let nextName = temp[nextInd];
-    //   arr = temp.splice(nextInd, 1);
-    //   let nextName = arr[0];
-    //   res.push(`${currentName} is giving a gift to ${nextName}`);
-
-    //   currentName = nextName;
-    // }
-
+    res.push(`${name2} is giving a gift to ${firstName}`);
     return res;
   }
 }
